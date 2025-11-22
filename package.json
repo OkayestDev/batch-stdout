@@ -2,10 +2,11 @@
     "name": "batch-stdout",
     "version": "0.0.1",
     "description": "Batch stdout write to efficiently log",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
         "test": "node --inspect=9229 ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
-        "benchmark": "node -r ts-node/register src/__tests__/benchmark.ts"
+        "benchmark": "node -r ts-node/register src/__tests__/benchmark.ts",
+        "build": "tsc"
     },
     "author": "",
     "license": "ISC",

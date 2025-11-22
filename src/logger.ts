@@ -6,13 +6,14 @@ const logOrder: Record<LogLevel, number> = {
     [LogLevel.INFO]: 1,
     [LogLevel.WARNING]: 2,
     [LogLevel.ERROR]: 3,
+    [LogLevel.DISABLED]: 4,
 };
 
 const MB_TO_BYTES = 1024 * 1024;
 
 type Options = {
     batchSizeMb: number;
-    logLevel?: "info" | "debug" | "warning" | "error";
+    logLevel?: "info" | "debug" | "warning" | "error" | "disabled";
     inject?: () => any;
     isPrettyPrint?: boolean;
     enableWorker?: boolean;
