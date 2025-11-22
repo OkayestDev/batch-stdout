@@ -1,0 +1,36 @@
+{
+    "http": {
+        "method": "POST",
+        "url": "/api/v1/users",
+        "statusCode": 201,
+        "responseTimeMs": 56
+    },
+    "req": {
+        "id": "req_abc123",
+        "ip": "203.0.113.42",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "headers": {
+            "content-type": "application/json",
+            "authorization": "Bearer [REDACTED]"
+        },
+        "body": {
+            "name": "Alice Smith",
+            "email": "alice@example.com",
+            "role": "user"
+        }
+    },
+    "res": {
+        "contentLength": 245,
+        "body": {
+            "id": "user_98765",
+            "name": "Alice Smith",
+            "email": "alice@example.com",
+            "role": "user",
+            "createdAt": "2025-11-22T14:45:12.300Z"
+        }
+    },
+    "service": {
+        "name": "user-service",
+        "version": "1.4.2"
+    }
+}
