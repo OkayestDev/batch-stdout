@@ -1,12 +1,13 @@
 {
     "name": "batch-stdout",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Batch stdout write to efficiently log",
     "main": "dist/index.js",
     "scripts": {
         "test": "node --inspect=9229 ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
         "benchmark": "node -r ts-node/register src/__tests__/benchmark.ts",
-        "build": "tsc"
+        "build": "tsc",
+        "publish:latest": "npm run build && npm publish --access public"
     },
     "author": "OkayestDev",
     "license": "MIT",
@@ -17,5 +18,11 @@
         "ts-jest": "^29.4.5",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3"
-    }
+    },
+    "keywords": [
+        "logger",
+        "batch",
+        "stdout",
+        "logging"
+    ]
 }
