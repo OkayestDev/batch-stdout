@@ -17,16 +17,23 @@ type Options = {
     inject?: () => any;
     isPrettyPrint?: boolean;
     enableWorker?: boolean;
+    batchWindowMs?: number;
 };
 
 export function logger(options: Options) {
-    const { batchSizeMb, inject, logLevel = LogLevel.DEBUG, isPrettyPrint = false } = options;
+    const {
+        batchSizeMb,
+        inject,
+        logLevel = LogLevel.DEBUG,
+        isPrettyPrint = false,
+        batchWindowMs = 0,
+    } = options;
 
     function flushFn(items: any[]) {
         process.stdout.write(items.join("\n"));
     }
 
-    const batch = Batch(batchSizeMb * MB_TO_BYTES, flushFn, isPrettyPrint);
+    const batch = Batch(batchSizeMb * MB_TO_BYTES, flushFn, isPrettyPrint, batchWindowMs);
 
     function log(level: LogLevel, items: any[]) {
         if (inject) {

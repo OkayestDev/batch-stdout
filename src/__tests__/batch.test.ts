@@ -1,6 +1,32 @@
 import { Batch } from "../batch";
 
+jest.useFakeTimers();
+
 describe("Batch", () => {
+    it("should invoke flush callback after batch window", () => {
+        const flushCallback = jest.fn();
+        const batch = Batch(1024, flushCallback, false, 100);
+        batch.add({ name: "John" });
+        expect(flushCallback).not.toHaveBeenCalled();
+        jest.advanceTimersByTime(100);
+        expect(flushCallback).toHaveBeenCalledWith([JSON.stringify({ name: "John" })]);
+    });
+
+    it("should clear timeout when adding", () => {
+        const flushCallback = jest.fn();
+        const batch = Batch(1024, flushCallback, false, 100);
+        batch.add({ name: "John" });
+        jest.advanceTimersByTime(25);
+        batch.add({ name: "Jane" });
+        jest.advanceTimersByTime(75);
+        expect(flushCallback).not.toHaveBeenCalled();
+        jest.advanceTimersByTime(100);
+        expect(flushCallback).toHaveBeenCalledWith([
+            JSON.stringify({ name: "John" }),
+            JSON.stringify({ name: "Jane" }),
+        ]);
+    });
+
     it("should count current batch size", () => {
         const flushCallback = jest.fn();
         const batch = Batch(1024, flushCallback);

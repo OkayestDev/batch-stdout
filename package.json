@@ -8,8 +8,8 @@
         "benchmark": "node -r ts-node/register src/__tests__/benchmark.ts",
         "build": "tsc"
     },
-    "author": "",
-    "license": "ISC",
+    "author": "OkayestDev",
+    "license": "MIT",
     "devDependencies": {
         "@types/jest": "^30.0.0",
         "@types/node": "^24.10.1",

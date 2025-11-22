@@ -8,18 +8,30 @@ function computeSize(s: string): number {
 export function Batch(
     batchSize: number,
     flushCallback: (items: any[]) => void,
-    isPrettyPrint: boolean = false
+    isPrettyPrint: boolean = false,
+    batchWindowMs: number = 0
 ) {
     let items: any[] = [];
     let currentBatchSize = 0;
+    let batchWindowTimeout: NodeJS.Timeout | undefined = undefined;
+
+    function setBatchWindowTimeout() {
+        if (batchWindowMs) {
+            batchWindowTimeout = setTimeout(flush, batchWindowMs);
+        }
+    }
 
     function add(item: any) {
         item = isPrettyPrint ? JSON.stringify(item, null, 2) : JSON.stringify(item);
         items.push(item);
         currentBatchSize += computeSize(item);
-        if (currentBatchSize >= batchSize) {
-            flush();
+        if (batchWindowTimeout) {
+            clearTimeout(batchWindowTimeout);
         }
+        if (currentBatchSize >= batchSize) {
+            return flush();
+        }
+        setBatchWindowTimeout();
     }
 
     function flush() {
