@@ -1,6 +1,7 @@
 {
-  "thisDuration": "38.25ms",
-  "thisPrettyPrintAndInjectDuration": "149.61ms",
-  "consoleDuration": "186.33ms",
-  "stdoutDuration": "55.50ms"
+  "batch-stdout": "35.47ms",
+  "batch-stdout with injection & pretty-print": "134.54ms",
+  "console.log": "177.16ms",
+  "process.stdout.write": "71.17ms",
+  "process.stdout.write with pretty-print": "143.16ms"
 }

@@ -5,7 +5,7 @@ const ITERATIONS = 1000;
 
 function thisBenchmark() {
     const log = logger({
-        batchSizeMb: 1000,
+        batchSizeMb: 100,
         isPrettyPrint: false,
     });
     const logStart = performance.now();
@@ -58,6 +58,17 @@ function stdoutBenchmark() {
     return stdoutDuration;
 }
 
+function stdoutPrettyPrintBatchBenchmark() {
+    const stdoutStart = performance.now();
+    for (let i = 0; i < ITERATIONS; i++) {
+        process.stdout.write(JSON.stringify(apiResponseFixture, null, 2) + "\n");
+    }
+    const stdoutEnd = performance.now();
+    const stdoutDuration = stdoutEnd - stdoutStart;
+    console.log(`Logged ${ITERATIONS} messages in ${stdoutDuration}ms`);
+    return stdoutDuration;
+}
+
 function formatDuration(duration: number) {
     return duration.toFixed(2) + "ms";
 }
@@ -66,10 +77,15 @@ require("fs").writeFileSync(
     "benchmark.json",
     JSON.stringify(
         {
-            thisDuration: formatDuration(thisBenchmark()),
-            thisPrettyPrintAndInjectDuration: formatDuration(thisPrettyPrintAndInjectBenchmark()),
-            consoleDuration: formatDuration(consoleBenchmark()),
-            stdoutDuration: formatDuration(stdoutBenchmark()),
+            "batch-stdout": formatDuration(thisBenchmark()),
+            "batch-stdout with injection & pretty-print": formatDuration(
+                thisPrettyPrintAndInjectBenchmark()
+            ),
+            "console.log": formatDuration(consoleBenchmark()),
+            "process.stdout.write": formatDuration(stdoutBenchmark()),
+            "process.stdout.write with pretty-print": formatDuration(
+                stdoutPrettyPrintBatchBenchmark()
+            ),
         },
         null,
         2
