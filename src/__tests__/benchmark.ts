@@ -1,5 +1,10 @@
 import { logger } from "../logger";
 import apiResponseFixture from "./api-response.fixture.json";
+import SonicBoom from "sonic-boom";
+import pino from "pino";
+
+const stream = new SonicBoom({ fd: 1, sync: false });
+const pinoInstance = pino(pino.destination(1));
 
 const ITERATIONS = 1000;
 
@@ -69,25 +74,52 @@ function stdoutPrettyPrintBatchBenchmark() {
     return stdoutDuration;
 }
 
+async function sonicBoomBenchmark() {
+    const sonicBoomStart = performance.now();
+    for (let i = 0; i < ITERATIONS; i++) {
+        stream.write(JSON.stringify(apiResponseFixture) + "\n");
+    }
+    await stream.flush();
+    const sonicBoomEnd = performance.now();
+    const sonicBoomDuration = sonicBoomEnd - sonicBoomStart;
+    console.log(`Logged ${ITERATIONS} messages in ${sonicBoomDuration}ms`);
+    return sonicBoomDuration;
+}
+
+function pinoBenchmark() {
+    const pinoStart = performance.now();
+    for (let i = 0; i < ITERATIONS; i++) {
+        pinoInstance.info(apiResponseFixture);
+    }
+    const pinoEnd = performance.now();
+    const pinoDuration = pinoEnd - pinoStart;
+    console.log(`Logged ${ITERATIONS} messages in ${pinoDuration}ms`);
+    return pinoDuration;
+}
+
 function formatDuration(duration: number) {
     return duration.toFixed(2) + "ms";
 }
 
-require("fs").writeFileSync(
-    "benchmark.json",
-    JSON.stringify(
-        {
-            "batch-stdout": formatDuration(thisBenchmark()),
-            "batch-stdout with injection & pretty-print": formatDuration(
-                thisPrettyPrintAndInjectBenchmark()
-            ),
-            "console.log": formatDuration(consoleBenchmark()),
-            "process.stdout.write": formatDuration(stdoutBenchmark()),
-            "process.stdout.write with pretty-print": formatDuration(
-                stdoutPrettyPrintBatchBenchmark()
-            ),
-        },
-        null,
-        2
-    )
-);
+(async () => {
+    require("fs").writeFileSync(
+        "benchmark.json",
+        JSON.stringify(
+            {
+                "batch-stdout": formatDuration(thisBenchmark()),
+                "batch-stdout with injection & pretty-print": formatDuration(
+                    thisPrettyPrintAndInjectBenchmark()
+                ),
+                "console.log": formatDuration(consoleBenchmark()),
+                "process.stdout.write": formatDuration(stdoutBenchmark()),
+                "process.stdout.write with pretty-print": formatDuration(
+                    stdoutPrettyPrintBatchBenchmark()
+                ),
+                "sonic-boom": formatDuration(await sonicBoomBenchmark()),
+                pino: formatDuration(pinoBenchmark()),
+            },
+            null,
+            2
+        )
+    );
+})();

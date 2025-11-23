@@ -1,5 +1,8 @@
 import { Batch } from "./batch";
-import { LogLevel, SIGS } from "./constants";
+import { LogLevel } from "./constants";
+import SonicBoom from "sonic-boom";
+
+export const stream = new SonicBoom({ fd: 1, sync: false, minLength: 0 });
 
 const logOrder: Record<LogLevel, number> = {
     [LogLevel.DEBUG]: 0,
@@ -17,7 +20,7 @@ type Options = {
     inject?: () => any;
     /**
      * Pretty print the output
-     * @Note this is a substantial performance hit
+     * @Note this is a performance hit
      * */
     isPrettyPrint?: boolean;
     batchWindowMs?: number;
@@ -33,7 +36,7 @@ export function logger(options: Options = {}) {
     } = options;
 
     function flushFn(items: any[]) {
-        process.stdout.write(items.join("\n"));
+        stream.write(items.join("\n"));
     }
 
     const batch = Batch(batchSizeMb * MB_TO_BYTES, flushFn, isPrettyPrint, batchWindowMs);
@@ -80,10 +83,7 @@ export function logger(options: Options = {}) {
     /** Flush all logs in memory */
     function flush() {
         batch.flush();
-    }
-
-    for (const sig of SIGS) {
-        process.on(sig, flush);
+        stream.flush();
     }
 
     return {

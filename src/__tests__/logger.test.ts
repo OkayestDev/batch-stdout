@@ -1,18 +1,18 @@
 import { LogLevel } from "../constants";
-import { logger } from "../logger";
+import { logger, stream } from "../logger";
+import apiResponseFixture from "./api-response.fixture.json";
 
 describe("Logger", () => {
     it("log with defaults", () => {
-        const stdoutSpy = jest.spyOn(process.stdout, "write");
+        const stdoutSpy = jest.spyOn(stream, "write");
         const log = logger();
-
         log.info("Hello, world!");
         log.flush();
         expect(stdoutSpy).toHaveBeenCalledWith(JSON.stringify([LogLevel.INFO, "Hello, world!"]));
     });
 
     it("should debug", async () => {
-        const stdoutSpy = jest.spyOn(process.stdout, "write");
+        const stdoutSpy = jest.spyOn(stream, "write");
         const log = logger({
             batchSizeMb: 1 / (1024 * 1024), // 1 byte
             inject: () => ({ timestamp: "now", trace: "1234" }),
@@ -32,21 +32,11 @@ describe("Logger", () => {
     });
 
     it("should write to stdout on flush", () => {
-        const stdoutSpy = jest.spyOn(process.stdout, "write");
+        const stdoutSpy = jest.spyOn(stream, "write");
         const log = logger({ batchSizeMb: 20 / (1024 * 1024) });
         log.info("Hello, world!");
         log.info("Hello, world!");
         expect(stdoutSpy).toHaveBeenCalled();
-    });
-
-    describe("handle signals", () => {
-        it("should handle SIGINT", async () => {
-            const stdoutSpy = jest.spyOn(process.stdout, "write");
-            const log = logger({ batchSizeMb: 1024 });
-            log.info("Hello, world!");
-            await process.emit("SIGINT");
-            expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining("Hello, world!"));
-        });
     });
 
     describe("log levels", () => {

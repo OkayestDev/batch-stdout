@@ -1,6 +1,6 @@
 # batch-stdout
 
-Small, dependency-less batch stdout logger.
+Small batch stdout logger built on top of [Sonic Boom](https://www.npmjs.com/package/sonic-boom).
 
 ## Features
 
@@ -8,7 +8,6 @@ Small, dependency-less batch stdout logger.
 -   **Log Levels**: Supports `debug`, `info`, `warning`, `error`, and `disabled`.
 -   **Injection**: Easily inject metadata (like timestamps, trace IDs).
 -   **Pretty Printing**: Optional pretty-printed log outputs.
--   **Signal Handling**: Auto-flushes logs on process exit/signals (`SIGINT`, `SIGTERM`, etc).
 
 ---
 
@@ -100,11 +99,13 @@ Any logs buffered in memory are automatically flushed on process termination sig
 Benchmark done using a [benchmark script](./src/__tests__/benchmark.ts), comparing `console.log` & p`rocess.stdout.write` to this library. 1000 iterations of a [log fixture](./src/__tests__/api-response.fixture.json)
 
 ```json
-"batch-stdout": "36.58ms",
-"batch-stdout with injection & pretty-print": "135.77ms",
-"console.log": "181.65ms",
-"process.stdout.write": "50.70ms",
-"process.stdout.write with pretty-print": "140.26ms"
+"batch-stdout": "2.06ms",
+"batch-stdout with injection & pretty-print": "5.15ms",
+"console.log": "196.62ms",
+"process.stdout.write": "51.83ms",
+"process.stdout.write with pretty-print": "154.57ms",
+"sonic-boom": "1.59ms",
+"pino": "3.86ms"
 ```
 
 ---

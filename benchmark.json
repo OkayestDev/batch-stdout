@@ -1,7 +1,9 @@
 {
-  "batch-stdout": "36.58ms",
-  "batch-stdout with injection & pretty-print": "135.77ms",
-  "console.log": "181.65ms",
-  "process.stdout.write": "50.70ms",
-  "process.stdout.write with pretty-print": "140.26ms"
+  "batch-stdout": "2.01ms",
+  "batch-stdout with injection & pretty-print": "5.17ms",
+  "console.log": "176.22ms",
+  "process.stdout.write": "72.43ms",
+  "process.stdout.write with pretty-print": "143.19ms",
+  "sonic-boom": "1.51ms",
+  "pino": "3.91ms"
 }

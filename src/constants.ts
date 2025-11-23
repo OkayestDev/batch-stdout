@@ -1,18 +1,3 @@
-export const SIGS = [
-    "exit",
-    "SIGINT",
-    "SIGTERM",
-    "SIGQUIT",
-    "SIGBREAK",
-    "SIGABRT",
-    "SIGFPE",
-    "SIGILL",
-    "SIGINT",
-    "SIGTERM",
-    "SIGQUIT",
-    "SIGBREAK",
-];
-
 export enum LogLevel {
     DEBUG = "debug",
     INFO = "info",
