@@ -1,5 +1,4 @@
 export const SIGS = [
-    "beforeExit",
     "exit",
     "SIGINT",
     "SIGTERM",
