@@ -68,13 +68,14 @@ log.debug("Debug details", { meta: { ... } });
 
 #### Options
 
-| Name          | Type     | Default     | Description                               |
-| ------------- | -------- | ----------- | ----------------------------------------- |
-| batchSizeMb   | number   | 0.25        | Max batch size in MB before flush         |
-| logLevel      | string   | `"debug"`   | Log level filter                          |
-| inject        | function | `undefined` | Injected metadata for every log           |
-| isPrettyPrint | boolean  | `false`     | Use JSON pretty printing                  |
-| batchWindowMs | number   | 0           | Flush logs after timeframe. 0 is disabled |
+| Name           | Type     | Default     | Description                                                          |
+| -------------- | -------- | ----------- | -------------------------------------------------------------------- |
+| batchLimitType | string   | `"size"`    | Whether to limit batch to megabytes ("size") or item count ("count") |
+| batchLimit     | number   | 0.25        | Depending on limit type either megabytes or count of items           |
+| logLevel       | string   | `"debug"`   | Log level filter                                                     |
+| inject         | function | `undefined` | Injected metadata for every log                                      |
+| isPrettyPrint  | boolean  | `false`     | Use JSON pretty printing                                             |
+| batchWindowMs  | number   | 0           | Flush logs after timeframe. 0 is disabled                            |
 
 #### Logger methods
 

@@ -1,3 +1,5 @@
+import { BatchLimitType } from "./constants";
+
 function computeSize(s: string): number {
     // This isn't quite accurate compared to Buffer.byteLength
     // But the performance improvement is worth the inaccuracy
@@ -5,8 +7,11 @@ function computeSize(s: string): number {
     return bytes + 1; // +1 for the newline
 }
 
+const MB_TO_BYTES = 1024 * 1024;
+
 export function Batch(
-    batchSize: number,
+    batchLimitType: BatchLimitType,
+    batchLimit: number,
     flushCallback: (items: any[]) => void,
     isPrettyPrint: boolean = false,
     batchWindowMs: number = 0
@@ -21,14 +26,23 @@ export function Batch(
         }
     }
 
+    function shouldFlush(item: string) {
+        switch (batchLimitType) {
+            case BatchLimitType.COUNT:
+                return items.length >= batchLimit;
+            case BatchLimitType.SIZE:
+                currentBatchSize += computeSize(item);
+                return currentBatchSize >= batchLimit * MB_TO_BYTES;
+        }
+    }
+
     function add(item: any) {
         item = isPrettyPrint ? JSON.stringify(item, null, 2) : JSON.stringify(item);
         items.push(item);
-        currentBatchSize += computeSize(item);
         if (batchWindowTimeout) {
             clearTimeout(batchWindowTimeout);
         }
-        if (currentBatchSize >= batchSize) {
+        if (shouldFlush(item)) {
             return flush();
         }
         setBatchWindowTimeout();
@@ -41,7 +55,12 @@ export function Batch(
     }
 
     function getBatchSize() {
-        return currentBatchSize;
+        switch (batchLimitType) {
+            case BatchLimitType.COUNT:
+                return items.length;
+            case BatchLimitType.SIZE:
+                return currentBatchSize;
+        }
     }
 
     return {

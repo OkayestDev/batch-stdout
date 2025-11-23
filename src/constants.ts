@@ -5,3 +5,8 @@ export enum LogLevel {
     ERROR = "error",
     DISABLED = "disabled",
 }
+
+export enum BatchLimitType {
+    COUNT = "count",
+    SIZE = "size",
+}

@@ -1,5 +1,5 @@
 import { Batch } from "./batch";
-import { LogLevel } from "./constants";
+import { BatchLimitType, LogLevel } from "./constants";
 import SonicBoom from "sonic-boom";
 
 export const stream = new SonicBoom({ fd: 1, sync: false, minLength: 0 });
@@ -12,10 +12,9 @@ const logOrder: Record<LogLevel, number> = {
     [LogLevel.DISABLED]: 4,
 };
 
-const MB_TO_BYTES = 1024 * 1024;
-
-type Options = {
-    batchSizeMb?: number;
+export type Options = {
+    batchLimitType?: "count" | "size";
+    batchLimit?: number;
     logLevel?: "info" | "debug" | "warning" | "error" | "disabled";
     inject?: () => any;
     /**
@@ -28,7 +27,8 @@ type Options = {
 
 export function logger(options: Options = {}) {
     const {
-        batchSizeMb = 0.25,
+        batchLimitType = BatchLimitType.SIZE,
+        batchLimit = 0.25,
         inject,
         logLevel = LogLevel.DEBUG,
         isPrettyPrint = false,
@@ -39,11 +39,21 @@ export function logger(options: Options = {}) {
         stream.write(items.join("\n") + "\n");
     }
 
-    const batch = Batch(batchSizeMb * MB_TO_BYTES, flushFn, isPrettyPrint, batchWindowMs);
+    const batch = Batch(
+        batchLimitType as BatchLimitType,
+        batchLimit,
+        flushFn,
+        isPrettyPrint,
+        batchWindowMs
+    );
 
     const printLogLevel = (level: LogLevel) => `level:${level}`;
 
     function log(level: LogLevel, items: any[]) {
+        if (logOrder[logLevel] > logOrder[level]) {
+            return;
+        }
+
         if (inject) {
             return batch.add([printLogLevel(level), inject(), ...items]);
         }
@@ -51,34 +61,18 @@ export function logger(options: Options = {}) {
     }
 
     function info(...items: any[]) {
-        if (logOrder[logLevel] > logOrder.info) {
-            return;
-        }
-
         return log(LogLevel.INFO, items);
     }
 
     function debug(...items: any[]) {
-        if (logOrder[logLevel] > logOrder.debug) {
-            return;
-        }
-
         return log(LogLevel.DEBUG, items);
     }
 
     function warning(...items: any[]) {
-        if (logOrder[logLevel] > logOrder.warning) {
-            return;
-        }
-
         return log(LogLevel.WARNING, items);
     }
 
     function error(...items: any[]) {
-        if (logOrder[logLevel] > logOrder.error) {
-            return;
-        }
-
         return log(LogLevel.ERROR, items);
     }
 
