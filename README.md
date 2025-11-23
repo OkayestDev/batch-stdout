@@ -86,18 +86,9 @@ log.debug("Debug details", { meta: { ... } });
 
 Each accepts any serializable argument(s).
 
----
-
-## Signal Handling
-
-Any logs buffered in memory are automatically flushed on process termination signals  
-(e.g., `SIGINT`, `SIGTERM`, `exit`, etc).
-
----
-
 ## Benchmark
 
-Benchmark done using a [benchmark script](./src/__tests__/benchmark.ts), comparing `console.log` & p`rocess.stdout.write` to this library. 1000 iterations of a [log fixture](./src/__tests__/api-response.fixture.json)
+Benchmark done using a [benchmark script](./src/__tests__/benchmark.ts), comparing `console.log`, `process.stdout.write`, `pino`, and raw `sonic-boom` to this library. 1000 iterations of a [log fixture](./src/__tests__/api-response.fixture.json)
 
 ```json
 "batch-stdout": "2.06ms",
