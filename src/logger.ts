@@ -41,11 +41,13 @@ export function logger(options: Options = {}) {
 
     const batch = Batch(batchSizeMb * MB_TO_BYTES, flushFn, isPrettyPrint, batchWindowMs);
 
+    const printLogLevel = (level: LogLevel) => `level:${level}`;
+
     function log(level: LogLevel, items: any[]) {
         if (inject) {
-            return batch.add([level, inject(), ...items]);
+            return batch.add([printLogLevel(level), inject(), ...items]);
         }
-        return batch.add([level, ...items]);
+        return batch.add([printLogLevel(level), ...items]);
     }
 
     function info(...items: any[]) {

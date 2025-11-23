@@ -9,7 +9,7 @@ describe("Logger", () => {
         log.info("Hello, world!");
         log.flush();
         expect(stdoutSpy).toHaveBeenCalledWith(
-            JSON.stringify([LogLevel.INFO, "Hello, world!"]) + "\n"
+            JSON.stringify(["level:info", "Hello, world!"]) + "\n"
         );
     });
 
@@ -21,7 +21,7 @@ describe("Logger", () => {
         });
         log.debug("Hello, world!");
         expect(stdoutSpy).toHaveBeenCalledWith(
-            JSON.stringify([LogLevel.DEBUG, { timestamp: "now", trace: "1234" }, "Hello, world!"]) +
+            JSON.stringify(["level:debug", { timestamp: "now", trace: "1234" }, "Hello, world!"]) +
                 "\n"
         );
     });
