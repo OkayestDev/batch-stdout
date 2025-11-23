@@ -5,13 +5,14 @@ const ITERATIONS = 1000;
 
 function thisBenchmark() {
     const log = logger({
-        batchSizeMb: 100,
+        batchSizeMb: 1000,
         isPrettyPrint: false,
     });
     const logStart = performance.now();
     for (let i = 0; i < ITERATIONS; i++) {
         log.info(apiResponseFixture);
     }
+    log.flush();
     const logEnd = performance.now();
     const logDuration = logEnd - logStart;
     console.log(`Logged ${ITERATIONS} messages in ${logDuration}ms`);
@@ -28,6 +29,7 @@ function thisPrettyPrintAndInjectBenchmark() {
     for (let i = 0; i < ITERATIONS; i++) {
         log.info(apiResponseFixture);
     }
+    log.flush();
     const logEnd = performance.now();
     const logDuration = logEnd - logStart;
     console.log(`Logged ${ITERATIONS} messages in ${logDuration}ms`);

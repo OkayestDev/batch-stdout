@@ -1,6 +1,6 @@
 {
-  "thisDuration": "1.57ms",
-  "thisPrettyPrintAndInjectDuration": "3.31ms",
-  "consoleDuration": "218.30ms",
-  "stdoutDuration": "50.83ms"
+  "thisDuration": "38.25ms",
+  "thisPrettyPrintAndInjectDuration": "149.61ms",
+  "consoleDuration": "186.33ms",
+  "stdoutDuration": "55.50ms"
 }

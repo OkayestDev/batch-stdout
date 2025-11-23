@@ -100,8 +100,8 @@ Any logs buffered in memory are automatically flushed on process termination sig
 Benchmark done using a [benchmark script](./src/__tests__/benchmark.ts), comparing `console.log` & p`rocess.stdout.write` to this library. 1000 iterations of a [log fixture](./src/__tests__/api-response.fixture.json)
 
 ```json
-"batch-stdout": "1.54ms"
-"batch-stdout with injection & pretty-print": "3.23ms",
+"batch-stdout": "38.25ms"
+"batch-stdout with injection & pretty-print": "149.45ms",
 "console.log": "196.93ms",
 "process.stdout.write": "51.95ms"
 ```

@@ -74,12 +74,13 @@ export function logger(options: Options) {
         return log(LogLevel.ERROR, items);
     }
 
-    function close() {
+    /** Flush all logs in memory */
+    function flush() {
         batch.flush();
     }
 
     for (const sig of SIGS) {
-        process.on(sig, close);
+        process.on(sig, flush);
     }
 
     return {
@@ -87,5 +88,6 @@ export function logger(options: Options) {
         debug,
         error,
         warning,
+        flush,
     };
 }
