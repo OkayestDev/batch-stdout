@@ -1,4 +1,5 @@
-import { logger, stream } from "../logger";
+import { LogLevel } from "../constants";
+import { logger, stream, buildLog } from "../logger";
 
 describe("Logger", () => {
     it("log with defaults", () => {
@@ -7,7 +8,7 @@ describe("Logger", () => {
         log.info("Hello, world!");
         log.flush();
         expect(stdoutSpy).toHaveBeenCalledWith(
-            JSON.stringify(["level:info", "Hello, world!"]) + "\n"
+            JSON.stringify({ level: "info", msg: "Hello, world!" }) + "\n"
         );
     });
 
@@ -19,8 +20,12 @@ describe("Logger", () => {
         });
         log.debug("Hello, world!");
         expect(stdoutSpy).toHaveBeenCalledWith(
-            JSON.stringify(["level:debug", { timestamp: "now", trace: "1234" }, "Hello, world!"]) +
-                "\n"
+            JSON.stringify({
+                level: "debug",
+                msg: "Hello, world!",
+                timestamp: "now",
+                trace: "1234",
+            }) + "\n"
         );
     });
 
@@ -89,6 +94,40 @@ describe("Logger", () => {
             const log = logger({ batchLimit: 1024, inject, logLevel: "disabled" });
             log.error("Hello, world!");
             expect(inject).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("buildLog", () => {
+        it("should build a log object", () => {
+            const log = buildLog(LogLevel.INFO, ["Hello, world!"], () => ({
+                timestamp: "123",
+            }));
+            expect(log).toEqual({ level: "info", msg: "Hello, world!", timestamp: "123" });
+        });
+
+        it("should merge objects", () => {
+            const log = buildLog(
+                LogLevel.INFO,
+                [
+                    {
+                        id: "123",
+                        name: "John",
+                        lastName: "Doe",
+                        birthday: "1990-01-01",
+                    },
+                ],
+                () => ({
+                    timestamp: "123",
+                })
+            );
+            expect(log).toEqual({
+                level: "info",
+                id: "123",
+                name: "John",
+                lastName: "Doe",
+                birthday: "1990-01-01",
+                timestamp: "123",
+            });
         });
     });
 });

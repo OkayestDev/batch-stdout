@@ -1,6 +1,7 @@
 import { Batch } from "./batch";
 import { BatchLimitType, LogLevel } from "./constants";
 import SonicBoom from "sonic-boom";
+import { isObject } from "./utils/object.utils";
 
 export const stream = new SonicBoom({ fd: 1, sync: false, minLength: 0 });
 
@@ -25,6 +26,38 @@ export type Options = {
     batchWindowMs?: number;
 };
 
+export function buildLog(level: LogLevel, items: any[], inject?: () => any) {
+    const injection = inject ? inject() : undefined;
+    const log: Record<string, any> = {
+        level,
+        msg: undefined,
+    };
+    const msgParts: string[] = [];
+
+    if (isObject(injection)) {
+        Object.assign(log, injection);
+    }
+
+    for (const item of items) {
+        if (!item) {
+            continue;
+        }
+
+        if (isObject(item)) {
+            Object.assign(log, item);
+            continue;
+        }
+
+        msgParts.push(typeof item === "string" ? item : JSON.stringify(items));
+    }
+
+    if (msgParts.length > 0) {
+        log.msg = msgParts.join(" ");
+    }
+
+    return log;
+}
+
 export function logger(options: Options = {}) {
     const {
         batchLimitType = BatchLimitType.SIZE,
@@ -47,17 +80,13 @@ export function logger(options: Options = {}) {
         batchWindowMs
     );
 
-    const printLogLevel = (level: LogLevel) => `level:${level}`;
-
     function log(level: LogLevel, items: any[]) {
         if (logOrder[logLevel] > logOrder[level]) {
             return;
         }
 
-        if (inject) {
-            return batch.add([printLogLevel(level), inject(), ...items]);
-        }
-        return batch.add([printLogLevel(level), ...items]);
+        const log = buildLog(level, items, inject);
+        batch.add(log);
     }
 
     function info(...items: any[]) {
