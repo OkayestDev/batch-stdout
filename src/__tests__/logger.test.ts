@@ -23,8 +23,7 @@ describe("Logger", () => {
             JSON.stringify({
                 level: "debug",
                 msg: "Hello, world!",
-                timestamp: "now",
-                trace: "1234",
+                injection: { timestamp: "now", trace: "1234" },
             }) + "\n"
         );
     });
@@ -102,7 +101,11 @@ describe("Logger", () => {
             const log = buildLog(LogLevel.INFO, ["Hello, world!"], () => ({
                 timestamp: "123",
             }));
-            expect(log).toEqual({ level: "info", msg: "Hello, world!", timestamp: "123" });
+            expect(log).toEqual({
+                level: "info",
+                msg: "Hello, world!",
+                injection: { timestamp: "123" },
+            });
         });
 
         it("should merge objects", () => {
@@ -122,11 +125,11 @@ describe("Logger", () => {
             );
             expect(log).toEqual({
                 level: "info",
+                injection: { timestamp: "123" },
                 id: "123",
                 name: "John",
                 lastName: "Doe",
                 birthday: "1990-01-01",
-                timestamp: "123",
             });
         });
     });

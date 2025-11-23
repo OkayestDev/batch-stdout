@@ -31,12 +31,9 @@ export function buildLog(level: LogLevel, items: any[], inject?: () => any) {
     const log: Record<string, any> = {
         level,
         msg: undefined,
+        injection,
     };
     const msgParts: string[] = [];
-
-    if (isObject(injection)) {
-        Object.assign(log, injection);
-    }
 
     for (const item of items) {
         if (!item) {
