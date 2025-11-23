@@ -12,17 +12,20 @@ const logOrder: Record<LogLevel, number> = {
 const MB_TO_BYTES = 1024 * 1024;
 
 type Options = {
-    batchSizeMb: number;
+    batchSizeMb?: number;
     logLevel?: "info" | "debug" | "warning" | "error" | "disabled";
     inject?: () => any;
+    /**
+     * Pretty print the output
+     * @Note this is a substantial performance hit
+     * */
     isPrettyPrint?: boolean;
-    enableWorker?: boolean;
     batchWindowMs?: number;
 };
 
-export function logger(options: Options) {
+export function logger(options: Options = {}) {
     const {
-        batchSizeMb,
+        batchSizeMb = 0.25,
         inject,
         logLevel = LogLevel.DEBUG,
         isPrettyPrint = false,

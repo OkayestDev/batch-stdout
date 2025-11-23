@@ -71,7 +71,7 @@ log.debug("Debug details", { meta: { ... } });
 
 | Name          | Type     | Default     | Description                               |
 | ------------- | -------- | ----------- | ----------------------------------------- |
-| batchSizeMb   | number   |             | Max batch size in MB before flush         |
+| batchSizeMb   | number   | 0.25        | Max batch size in MB before flush         |
 | logLevel      | string   | `"debug"`   | Log level filter                          |
 | inject        | function | `undefined` | Injected metadata for every log           |
 | isPrettyPrint | boolean  | `false`     | Use JSON pretty printing                  |
@@ -100,11 +100,11 @@ Any logs buffered in memory are automatically flushed on process termination sig
 Benchmark done using a [benchmark script](./src/__tests__/benchmark.ts), comparing `console.log` & p`rocess.stdout.write` to this library. 1000 iterations of a [log fixture](./src/__tests__/api-response.fixture.json)
 
 ```json
-"batch-stdout": "35.47ms",
-"batch-stdout with injection & pretty-print": "134.54ms",
-"console.log": "177.16ms",
-"process.stdout.write": "71.17ms",
-"process.stdout.write with pretty-print": "143.16ms"
+"batch-stdout": "36.58ms",
+"batch-stdout with injection & pretty-print": "135.77ms",
+"console.log": "181.65ms",
+"process.stdout.write": "50.70ms",
+"process.stdout.write with pretty-print": "140.26ms"
 ```
 
 ---

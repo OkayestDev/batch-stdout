@@ -5,7 +5,7 @@ const ITERATIONS = 1000;
 
 function thisBenchmark() {
     const log = logger({
-        batchSizeMb: 100,
+        batchSizeMb: 0.25,
         isPrettyPrint: false,
     });
     const logStart = performance.now();
@@ -21,7 +21,7 @@ function thisBenchmark() {
 
 function thisPrettyPrintAndInjectBenchmark() {
     const log = logger({
-        batchSizeMb: 100,
+        batchSizeMb: 0.25,
         isPrettyPrint: true,
         inject: () => ({ timestamp: new Date().toISOString() }),
     });

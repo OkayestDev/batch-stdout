@@ -2,6 +2,15 @@ import { LogLevel } from "../constants";
 import { logger } from "../logger";
 
 describe("Logger", () => {
+    it("log with defaults", () => {
+        const stdoutSpy = jest.spyOn(process.stdout, "write");
+        const log = logger();
+
+        log.info("Hello, world!");
+        log.flush();
+        expect(stdoutSpy).toHaveBeenCalledWith(JSON.stringify([LogLevel.INFO, "Hello, world!"]));
+    });
+
     it("should debug", async () => {
         const stdoutSpy = jest.spyOn(process.stdout, "write");
         const log = logger({
