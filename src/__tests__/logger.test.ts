@@ -8,7 +8,9 @@ describe("Logger", () => {
         const log = logger();
         log.info("Hello, world!");
         log.flush();
-        expect(stdoutSpy).toHaveBeenCalledWith(JSON.stringify([LogLevel.INFO, "Hello, world!"]));
+        expect(stdoutSpy).toHaveBeenCalledWith(
+            JSON.stringify([LogLevel.INFO, "Hello, world!"]) + "\n"
+        );
     });
 
     it("should debug", async () => {
@@ -19,7 +21,8 @@ describe("Logger", () => {
         });
         log.debug("Hello, world!");
         expect(stdoutSpy).toHaveBeenCalledWith(
-            JSON.stringify([LogLevel.DEBUG, { timestamp: "now", trace: "1234" }, "Hello, world!"])
+            JSON.stringify([LogLevel.DEBUG, { timestamp: "now", trace: "1234" }, "Hello, world!"]) +
+                "\n"
         );
     });
 

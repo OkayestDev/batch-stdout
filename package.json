@@ -1,6 +1,6 @@
 {
     "name": "batch-stdout",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Batch stdout write to efficiently log",
     "main": "dist/index.js",
     "scripts": {

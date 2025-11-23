@@ -36,7 +36,7 @@ export function logger(options: Options = {}) {
     } = options;
 
     function flushFn(items: any[]) {
-        stream.write(items.join("\n"));
+        stream.write(items.join("\n") + "\n");
     }
 
     const batch = Batch(batchSizeMb * MB_TO_BYTES, flushFn, isPrettyPrint, batchWindowMs);
